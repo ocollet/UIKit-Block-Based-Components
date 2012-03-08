@@ -46,7 +46,7 @@ You could use this method to add a button to an alert view that requires more th
 
 Show it the usual way.
 
-## OCBarButtonItem
+### OCBarButtonItem
 
 Instantiate a button with any of the following constructors:
 
