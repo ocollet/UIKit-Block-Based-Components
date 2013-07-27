@@ -13,10 +13,10 @@
 + (id)alertViewWithTitle:(NSString *)title
 				 message:(NSString*)message
 			 cancelTitle:(NSString *)cancelTitle
-			cancelAction:(void(^)(void))cancelBlock
+			cancelAction:(void(^)(OCAlertView *alertView))cancelBlock
 			confirmTitle:(NSString *)confirmTitle
-		   confirmAction:(void(^)(void))confirmBlock;
+		   confirmAction:(void(^)(OCAlertView *alertView))confirmBlock;
 
-- (void)addButtonWithTitle:(NSString *)title action:(void (^)(void))actionBlock;
+- (void)addButtonWithTitle:(NSString *)title action:(void (^)(OCAlertView *alertView))actionBlock;
 
 @end

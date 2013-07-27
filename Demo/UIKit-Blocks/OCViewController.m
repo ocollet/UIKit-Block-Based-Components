@@ -66,9 +66,9 @@
 												 cancelTitle:@"No"
 												cancelAction:nil
 												confirmTitle:@"Yes"
-											   confirmAction:^{
-												   [bself.view setBackgroundColor:[UIColor whiteColor]];
-											   }];
+											   confirmAction:^(OCAlertView *alertView) {
+                                                   [bself.view setBackgroundColor:[UIColor whiteColor]];
+                                               }];
 	[alertView show];
 }
 

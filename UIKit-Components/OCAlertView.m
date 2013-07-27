@@ -7,7 +7,7 @@
 
 #import "OCAlertView.h"
 
-typedef void(^OCAlertViewActionBlock)(void);
+typedef void(^OCAlertViewActionBlock)(OCAlertView *alertView);
 
 //
 
@@ -51,9 +51,9 @@ typedef void(^OCAlertViewActionBlock)(void);
 + (id)alertViewWithTitle:(NSString *)title
 				 message:(NSString*)message
 			 cancelTitle:(NSString *)cancelTitle
-			cancelAction:(void(^)(void))cancelBlock
+			cancelAction:(void(^)(OCAlertView *alertView))cancelBlock
 			confirmTitle:(NSString *)confirmTitle
-		   confirmAction:(void(^)(void))confirmBlock {
+		   confirmAction:(void(^)(OCAlertView *alertView))confirmBlock {
 	OCAlertView *alertView = [[OCAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
 	[alertView addButtonWithTitle:cancelTitle action:cancelBlock];
 	[alertView addButtonWithTitle:confirmTitle action:confirmBlock];
@@ -76,7 +76,7 @@ typedef void(^OCAlertViewActionBlock)(void);
 
 #pragma mark - Buttons
 
-- (void)addButtonWithTitle:(NSString *)title action:(void (^)(void))actionBlock {
+- (void)addButtonWithTitle:(NSString *)title action:(void (^)(OCAlertView *alertView))actionBlock {
 	if (title == nil) return;
 	[self.actions addObject:[OCAlertViewAction actionWithTitle:title actionBlock:actionBlock]];
 }
@@ -90,7 +90,7 @@ typedef void(^OCAlertViewActionBlock)(void);
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	if (buttonIndex >= [self.actions count]) return;
 	OCAlertViewAction *action = [self.actions objectAtIndex:buttonIndex];
-	if (action.actionBlock) action.actionBlock();
+	if (action.actionBlock) action.actionBlock(self);
 }
 
 @end
