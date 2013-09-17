@@ -24,7 +24,7 @@ typedef void(^OCAlertViewActionBlock)(OCAlertView *alertView);
 
 //
 
-@interface OCAlertView ()
+@interface OCAlertView () <UITextFieldDelegate>
 
 @property (nonatomic,retain) NSMutableArray *actions;
 
@@ -65,7 +65,7 @@ typedef void(^OCAlertViewActionBlock)(OCAlertView *alertView);
 		[super addButtonWithTitle:action.title];
 	}
 	self.delegate = self;
-
+    
 	[super show];
 }
 
@@ -85,12 +85,40 @@ typedef void(^OCAlertViewActionBlock)(OCAlertView *alertView);
 #pragma mark - UIAlertView delegate
 
 - (void)willPresentAlertView:(UIAlertView *)alertView {
+    if (self.alertViewStyle != UIAlertViewStyleDefault) {
+        [self textFieldAtIndex:0].delegate = self;
+    }
+    if (self.alertViewStyle == UIAlertViewStyleLoginAndPasswordInput) {
+        [self textFieldAtIndex:1].delegate = self;
+    }
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	if (buttonIndex >= [self.actions count]) return;
 	OCAlertViewAction *action = [self.actions objectAtIndex:buttonIndex];
 	if (action.actionBlock) action.actionBlock(self);
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    BOOL shouldDismiss = NO;
+    
+    switch (self.alertViewStyle) {
+        case UIAlertViewStyleSecureTextInput:
+        case UIAlertViewStylePlainTextInput:
+            shouldDismiss = YES;
+            break;
+            
+        case UIAlertViewStyleLoginAndPasswordInput:
+            shouldDismiss = ([[[self textFieldAtIndex:0] text] length] > 0) && ([[[self textFieldAtIndex:1] text] length] > 0);
+            break;
+            
+        default:
+            break;
+    }
+    if (shouldDismiss) {
+        [self dismissWithClickedButtonIndex:1 animated:YES];
+    }
+    return (textField.text.length > 0);
 }
 
 @end
