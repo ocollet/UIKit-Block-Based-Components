@@ -59,7 +59,7 @@ typedef void(^OCActionSheetActionBlock)(void);
 			[super addButtonWithTitle:action.title];
 		}
 	}
-
+    
 	self.delegate = self;
 }
 
@@ -116,11 +116,53 @@ typedef void(^OCActionSheetActionBlock)(void);
 
 #pragma mark - UIActionSheet delegate
 
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	if (buttonIndex >= [self.actions count]) return;
-	OCActionSheetAction *action = [self.actions objectAtIndex:buttonIndex];
-	if (action.actionBlock) action.actionBlock();
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (self.actionSheetDelegate && [self.actionSheetDelegate respondsToSelector:@selector(actionSheet:clickedButtonAtIndex:)]) {
+        [self.actionSheetDelegate actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
+    }
 }
+
+- (void)actionSheetCancel:(UIActionSheet *)actionSheet
+{
+    if (self.actionSheetDelegate && [self.actionSheetDelegate respondsToSelector:@selector(actionSheetCancel:)]) {
+        [self.actionSheetDelegate actionSheetCancel:actionSheet];
+    }
+}
+
+- (void)willPresentActionSheet:(UIActionSheet *)actionSheet
+{
+    if (self.actionSheetDelegate && [self.actionSheetDelegate respondsToSelector:@selector(willPresentActionSheet:)]) {
+        [self.actionSheetDelegate willPresentActionSheet:actionSheet];
+    }
+}
+
+- (void)didPresentActionSheet:(UIActionSheet *)actionSheet
+{
+    if (self.actionSheetDelegate && [self.actionSheetDelegate respondsToSelector:@selector(didPresentActionSheet:)]) {
+        [self.actionSheetDelegate didPresentActionSheet:actionSheet];
+    }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet willDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (self.actionSheetDelegate && [self.actionSheetDelegate respondsToSelector:@selector(actionSheet:willDismissWithButtonIndex:)]) {
+        [self.actionSheetDelegate actionSheet:actionSheet willDismissWithButtonIndex:buttonIndex];
+    }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+	if (buttonIndex < [self.actions count]) {
+        OCActionSheetAction *action = [self.actions objectAtIndex:buttonIndex];
+        if (action.actionBlock) action.actionBlock();
+    }
+    
+    if (self.actionSheetDelegate && [self.actionSheetDelegate respondsToSelector:@selector(actionSheet:didDismissWithButtonIndex:)]) {
+        [self.actionSheetDelegate actionSheet:actionSheet didDismissWithButtonIndex:buttonIndex];
+    }
+}
+
+
 
 @end
 

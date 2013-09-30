@@ -7,7 +7,13 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol OCActionSheetDelegate <UIActionSheetDelegate>
+@end
+
+
 @interface OCActionSheet : UIActionSheet <UIActionSheetDelegate>
+
+@property (nonatomic, weak) id<OCActionSheetDelegate> actionSheetDelegate;
 
 + (id)actionSheetWithTitle:(NSString *)title;
 
