@@ -1,7 +1,3 @@
-pod "UIKit-Block-Based-Components", :path => "../"
+platform :ios
 
-target "Demo" do
-end
-
-target "DemoTests" do
-end
+pod "UIKit-Block-Based-Components", :path => "../UIKit-Block-Based-Components.podspec"
